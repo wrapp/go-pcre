@@ -169,7 +169,7 @@ func (pcre *PCRE) NameTable() []string {
 		log.Panicf("pcre_fullinfo: %d", rc)
 	}
 
-	var data []byte = *(*[]byte)(unsafe.Pointer(
+	var data = *(*[]byte)(unsafe.Pointer(
 		&reflect.SliceHeader{
 			Data: dataPtr,
 			Len:  pcre.NameCount() * pcre.NameEntrySize(),
