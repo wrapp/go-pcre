@@ -80,7 +80,7 @@ func testRE2(t *testing.T, file string) {
 	} else {
 		txt = f
 	}
-	lineno := 0
+	lineNo := 0
 	scanner := bufio.NewScanner(txt)
 	var (
 		str       []string
@@ -91,11 +91,11 @@ func testRE2(t *testing.T, file string) {
 		nFail     int
 		nCase     int
 	)
-	for lineno := 1; scanner.Scan(); lineno++ {
+	for lineNo = 1; scanner.Scan(); lineNo++ {
 		line := scanner.Text()
 		switch {
 		case line == "":
-			t.Fatalf("%s:%d: unexpected blank line", file, lineno)
+			t.Fatalf("%s:%d: unexpected blank line", file, lineNo)
 		case line[0] == '#':
 			continue
 		case 'A' <= line[0] && line[0] <= 'Z':
@@ -111,7 +111,7 @@ func testRE2(t *testing.T, file string) {
 			q, err := strconv.Unquote(line)
 			if err != nil {
 				// Fatal because we'll get out of sync.
-				t.Fatalf("%s:%d: unquote %s: %v", file, lineno, line, err)
+				t.Fatalf("%s:%d: unquote %s: %v", file, lineNo, line, err)
 			}
 			if inStrings {
 				str = append(str, q)
@@ -119,7 +119,7 @@ func testRE2(t *testing.T, file string) {
 			}
 			// Is a regexp.
 			if len(input) != 0 {
-				t.Fatalf("%s:%d: out of sync: have %d strings left before %#q", file, lineno, len(input), q)
+				t.Fatalf("%s:%d: out of sync: have %d strings left before %#q", file, lineNo, len(input), q)
 			}
 			re, err = tryCompile(q)
 			if err != nil {
@@ -127,7 +127,7 @@ func testRE2(t *testing.T, file string) {
 					// We don't and likely never will support \C; keep going.
 					continue
 				}
-				t.Errorf("%s:%d: compile %#q: %v", file, lineno, q, err)
+				t.Errorf("%s:%d: compile %#q: %v", file, lineNo, q, err)
 				if nFail++; nFail >= 100 {
 					t.Fatalf("stopping after %d errors", nFail)
 				}
@@ -137,7 +137,7 @@ func testRE2(t *testing.T, file string) {
 			refull, err = tryCompile(full)
 			if err != nil {
 				// Fatal because q worked, so this should always work.
-				t.Fatalf("%s:%d: compile full %#q: %v", file, lineno, full, err)
+				t.Fatalf("%s:%d: compile full %#q: %v", file, lineNo, full, err)
 			}
 			input = str
 		case line[0] == '-' || '0' <= line[0] && line[0] <= '9':
@@ -148,7 +148,7 @@ func testRE2(t *testing.T, file string) {
 				continue
 			}
 			if len(input) == 0 {
-				t.Fatalf("%s:%d: out of sync: no input remaining", file, lineno)
+				t.Fatalf("%s:%d: out of sync: no input remaining", file, lineNo)
 			}
 			var text string
 			text, input = input[0], input[1:]
@@ -162,13 +162,13 @@ func testRE2(t *testing.T, file string) {
 			}
 			res := strings.Split(line, ";")
 			if len(res) != len(run) {
-				t.Fatalf("%s:%d: have %d test results, want %d", file, lineno, len(res), len(run))
+				t.Fatalf("%s:%d: have %d test results, want %d", file, lineNo, len(res), len(run))
 			}
 			for i := range res {
 				have, suffix := run[i](re, refull, text)
-				want := parseResult(t, file, lineno, res[i])
+				want := parseResult(t, file, lineNo, res[i])
 				if !same(have, want) {
-					t.Errorf("%s:%d: %#q%s.FindSubmatchIndex(%#q) = %v, want %v", file, lineno, re, suffix, text, have, want)
+					t.Errorf("%s:%d: %#q%s.FindSubmatchIndex(%#q) = %v, want %v", file, lineNo, re, suffix, text, have, want)
 					if nFail++; nFail >= 100 {
 						t.Fatalf("stopping after %d errors", nFail)
 					}
@@ -176,7 +176,7 @@ func testRE2(t *testing.T, file string) {
 				}
 				b, suffix := match[i](re, refull, text)
 				if b != (want != nil) {
-					t.Errorf("%s:%d: %#q%s.MatchString(%#q) = %v, want %v", file, lineno, re, suffix, text, b, !b)
+					t.Errorf("%s:%d: %#q%s.MatchString(%#q) = %v, want %v", file, lineNo, re, suffix, text, b, !b)
 					if nFail++; nFail >= 100 {
 						t.Fatalf("stopping after %d errors", nFail)
 					}
@@ -185,14 +185,14 @@ func testRE2(t *testing.T, file string) {
 			}
 
 		default:
-			t.Fatalf("%s:%d: out of sync: %s\n", file, lineno, line)
+			t.Fatalf("%s:%d: out of sync: %s\n", file, lineNo, line)
 		}
 	}
 	if err := scanner.Err(); err != nil {
-		t.Fatalf("%s:%d: %v", file, lineno, err)
+		t.Fatalf("%s:%d: %v", file, lineNo, err)
 	}
 	if len(input) != 0 {
-		t.Fatalf("%s:%d: out of sync: have %d strings left at EOF", file, lineno, len(input))
+		t.Fatalf("%s:%d: out of sync: have %d strings left at EOF", file, lineNo, len(input))
 	}
 	t.Logf("%d cases tested", nCase)
 }
