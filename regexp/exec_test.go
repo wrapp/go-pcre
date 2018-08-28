@@ -10,8 +10,6 @@ import (
 	"fmt"
 	"io"
 	"os"
-	//"path/filepath"
-	//"regexp/syntax"
 	"strconv"
 	"strings"
 	"testing"
@@ -90,8 +88,8 @@ func testRE2(t *testing.T, file string) {
 		inStrings bool
 		re        *Regexp
 		refull    *Regexp
-		nfail     int
-		ncase     int
+		nFail     int
+		nCase     int
 	)
 	for lineno := 1; scanner.Scan(); lineno++ {
 		line := scanner.Text()
@@ -130,8 +128,8 @@ func testRE2(t *testing.T, file string) {
 					continue
 				}
 				t.Errorf("%s:%d: compile %#q: %v", file, lineno, q, err)
-				if nfail++; nfail >= 100 {
-					t.Fatalf("stopping after %d errors", nfail)
+				if nFail++; nFail >= 100 {
+					t.Fatalf("stopping after %d errors", nFail)
 				}
 				continue
 			}
@@ -144,7 +142,7 @@ func testRE2(t *testing.T, file string) {
 			input = str
 		case line[0] == '-' || '0' <= line[0] && line[0] <= '9':
 			// A sequence of match results.
-			ncase++
+			nCase++
 			if re == nil {
 				// Failed to compile: skip results.
 				continue
@@ -171,16 +169,16 @@ func testRE2(t *testing.T, file string) {
 				want := parseResult(t, file, lineno, res[i])
 				if !same(have, want) {
 					t.Errorf("%s:%d: %#q%s.FindSubmatchIndex(%#q) = %v, want %v", file, lineno, re, suffix, text, have, want)
-					if nfail++; nfail >= 100 {
-						t.Fatalf("stopping after %d errors", nfail)
+					if nFail++; nFail >= 100 {
+						t.Fatalf("stopping after %d errors", nFail)
 					}
 					continue
 				}
 				b, suffix := match[i](re, refull, text)
 				if b != (want != nil) {
 					t.Errorf("%s:%d: %#q%s.MatchString(%#q) = %v, want %v", file, lineno, re, suffix, text, b, !b)
-					if nfail++; nfail >= 100 {
-						t.Fatalf("stopping after %d errors", nfail)
+					if nFail++; nFail >= 100 {
+						t.Fatalf("stopping after %d errors", nFail)
 					}
 					continue
 				}
@@ -196,14 +194,14 @@ func testRE2(t *testing.T, file string) {
 	if len(input) != 0 {
 		t.Fatalf("%s:%d: out of sync: have %d strings left at EOF", file, lineno, len(input))
 	}
-	t.Logf("%d cases tested", ncase)
+	t.Logf("%d cases tested", nCase)
 }
 
 var run = []func(*Regexp, *Regexp, string) ([]int, string){
-//runFull,
-//runPartial,
-//runFullLongest,
-//runPartialLongest,
+	//runFull,
+	//runPartial,
+	//runFullLongest,
+	//runPartialLongest,
 }
 
 /*
@@ -229,10 +227,10 @@ func runPartialLongest(re, refull *Regexp, text string) ([]int, string) {
 */
 
 var match = []func(*Regexp, *Regexp, string) (bool, string){
-//matchFull,
-//matchPartial,
-//matchFullLongest,
-//matchPartialLongest,
+	//matchFull,
+	//matchPartial,
+	//matchFullLongest,
+	//matchPartialLongest,
 }
 
 /*
@@ -679,11 +677,11 @@ func benchmark(b *testing.B, re string, n int) {
 }
 
 const (
-	easy0  = "ABCDEFGHIJKLMNOPQRSTUVWXYZ$"
-	easy1  = "A[AB]B[BC]C[CD]D[DE]E[EF]F[FG]G[GH]H[HI]I[IJ]J$"
-	medium = "[XYZ]ABCDEFGHIJKLMNOPQRSTUVWXYZ$"
-	hard   = "[ -~]*ABCDEFGHIJKLMNOPQRSTUVWXYZ$"
-	parens = "([ -~])*(A)(B)(C)(D)(E)(F)(G)(H)(I)(J)(K)(L)(M)" +
+	easy0       = "ABCDEFGHIJKLMNOPQRSTUVWXYZ$"
+	easy1       = "A[AB]B[BC]C[CD]D[DE]E[EF]F[FG]G[GH]H[HI]I[IJ]J$"
+	medium      = "[XYZ]ABCDEFGHIJKLMNOPQRSTUVWXYZ$"
+	hard        = "[ -~]*ABCDEFGHIJKLMNOPQRSTUVWXYZ$"
+	parentheses = "([ -~])*(A)(B)(C)(D)(E)(F)(G)(H)(I)(J)(K)(L)(M)" +
 		"(N)(O)(P)(Q)(R)(S)(T)(U)(V)(W)(X)(Y)(Z)$"
 )
 
