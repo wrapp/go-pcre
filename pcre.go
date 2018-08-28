@@ -134,7 +134,7 @@ func (pcre *PCRE) Exec(extra interface{}, subject string, startoffset int, optio
 	return Error(r)
 }
 
-func (pcre *PCRE) Capturecount() int {
+func (pcre *PCRE) CaptureCount() int {
 	var i C.int
 	if rc := C.pcre_fullinfo((*C.struct_real_pcre8_or_16)(pcre), nil, InfoCapturecount, unsafe.Pointer(&i)); rc != 0 {
 		panic("pcre_fullinfo")
@@ -142,7 +142,7 @@ func (pcre *PCRE) Capturecount() int {
 	return int(i)
 }
 
-func (pcre *PCRE) Namecount() int {
+func (pcre *PCRE) NameCount() int {
 	var i C.int
 	if rc := C.pcre_fullinfo((*C.struct_real_pcre8_or_16)(pcre), nil, InfoNamecount, unsafe.Pointer(&i)); rc != 0 {
 		panic("pcre_fullinfo")
@@ -150,7 +150,7 @@ func (pcre *PCRE) Namecount() int {
 	return int(i)
 }
 
-func (pcre *PCRE) Nameentrysize() int {
+func (pcre *PCRE) NameEntrySize() int {
 	var i C.int
 	if rc := C.pcre_fullinfo((*C.struct_real_pcre8_or_16)(pcre), nil, InfoNameentrysize, unsafe.Pointer(&i)); rc != 0 {
 		panic("pcre_fullinfo")
@@ -158,9 +158,9 @@ func (pcre *PCRE) Nameentrysize() int {
 	return int(i)
 }
 
-func (pcre *PCRE) Nametable() []string {
-	names := make([]string, pcre.Capturecount()+1)
-	if pcre.Namecount() == 0 {
+func (pcre *PCRE) NameTable() []string {
+	names := make([]string, pcre.CaptureCount()+1)
+	if pcre.NameCount() == 0 {
 		return names
 	}
 
@@ -172,17 +172,17 @@ func (pcre *PCRE) Nametable() []string {
 	var data []byte = *(*[]byte)(unsafe.Pointer(
 		&reflect.SliceHeader{
 			Data: dataPtr,
-			Len:  pcre.Namecount() * pcre.Nameentrysize(),
-			Cap:  pcre.Namecount() * pcre.Nameentrysize(),
+			Len:  pcre.NameCount() * pcre.NameEntrySize(),
+			Cap:  pcre.NameCount() * pcre.NameEntrySize(),
 		}))
 
 	for i := 0; i < len(data); {
 		n := (int(data[i]) << 8) | int(data[i+1])
-		s := string(data[i+2 : i+pcre.Nameentrysize()-1])
+		s := string(data[i+2 : i+pcre.NameEntrySize()-1])
 
 		names[n] = s
 
-		i += pcre.Nameentrysize()
+		i += pcre.NameEntrySize()
 	}
 
 	return names
