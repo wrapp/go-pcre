@@ -10,7 +10,7 @@ import (
 	"testing"
 )
 
-var good_re = []string{
+var goodRegex = []string{
 	``,
 	`.`,
 	`^.$`,
@@ -35,7 +35,7 @@ type stringError struct {
 	err string
 }
 
-var bad_re = []stringError{
+var badRegex = []stringError{
 	{`*`, "nothing to repeat"},
 	{`+`, "nothing to repeat"},
 	{`?`, "nothing to repeat"},
@@ -63,14 +63,14 @@ func compileTest(t *testing.T, expr string, error string) *Regexp {
 }
 
 func TestGoodCompile(t *testing.T) {
-	for i := 0; i < len(good_re); i++ {
-		compileTest(t, good_re[i], "")
+	for i := 0; i < len(goodRegex); i++ {
+		compileTest(t, goodRegex[i], "")
 	}
 }
 
 func TestBadCompile(t *testing.T) {
-	for i := 0; i < len(bad_re); i++ {
-		compileTest(t, bad_re[i].re, bad_re[i].err)
+	for i := 0; i < len(badRegex); i++ {
+		compileTest(t, badRegex[i].re, badRegex[i].err)
 	}
 }
 
