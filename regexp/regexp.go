@@ -33,14 +33,14 @@ type Regexp struct {
 
 func Compile(expr string) (*Regexp, error) {
 	// TODO - pcre.Study
-
-	if re, err := pcre.Compile(expr, pcre.UTF8|pcre.DupNames, nil); err != nil {
+	re, err := pcre.Compile(expr, pcre.UTF8|pcre.DupNames, nil)
+	if err != nil {
 		return nil, err
-	} else {
-		regexp := &Regexp{expr: expr, pcre: re}
-		runtime.SetFinalizer(regexp, func(re *Regexp) { re.pcre.Free() })
-		return regexp, nil
 	}
+
+	regexp := &Regexp{expr: expr, pcre: re}
+	runtime.SetFinalizer(regexp, func(re *Regexp) { re.pcre.Free() })
+	return regexp, nil
 }
 
 func CompilePOSIX(_ string) (*Regexp, error) {
@@ -86,11 +86,12 @@ func MatchReader(_ string, _ io.RuneReader) (matched bool, err error) {
 }
 
 func (re *Regexp) Find(b []byte) []byte {
-	if is := re.FindIndex(b); len(is) != 2 {
+	is := re.FindIndex(b)
+
+	if len(is) != 2 {
 		return nil
-	} else {
-		return b[is[0]:is[1]]
 	}
+		return b[is[0]:is[1]]
 }
 
 func (re *Regexp) FindString(s string) string { return string(re.Find([]byte(s))) }
