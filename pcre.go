@@ -191,7 +191,7 @@ func (pcre *PCRE) Nametable() []string {
 type Error int
 
 const (
-	ErrNomatch       = C.PCRE_ERROR_NOMATCH
+	ErrNoMatch       = C.PCRE_ERROR_NOMATCH
 	ErrNull          = C.PCRE_ERROR_NULL
 	ErrBadoption     = C.PCRE_ERROR_BADOPTION
 	ErrBadMagic      = C.PCRE_ERROR_BADMAGIC
