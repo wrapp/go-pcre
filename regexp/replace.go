@@ -55,7 +55,7 @@ func (re *Regexp) expand(dst []byte, template string, src []byte, match []int) [
 				dst = append(dst, src[match[2*num]:match[2*num+1]]...)
 			}
 		} else {
-			for i, namei := range re.SubexpNames() {
+			for i, namei := range re.SubExpNames() {
 				if name == namei && 2*i+1 < len(match) && match[2*i] >= 0 {
 					dst = append(dst, src[match[2*i]:match[2*i+1]]...)
 					break

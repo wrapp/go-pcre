@@ -404,20 +404,20 @@ var subexpCases = []subexpCase{
 func TestSubexp(t *testing.T) {
 	for _, c := range subexpCases {
 		re := MustCompile(c.input)
-		n := re.NumSubexp()
+		n := re.NumSubExp()
 		if n != c.num {
-			t.Errorf("%q: NumSubexp = %d, want %d", c.input, n, c.num)
+			t.Errorf("%q: NumSubExp = %d, want %d", c.input, n, c.num)
 			continue
 		}
-		names := re.SubexpNames()
+		names := re.SubExpNames()
 		if len(names) != 1+n {
-			t.Errorf("%q: len(SubexpNames) = %d, want %d", c.input, len(names), n)
+			t.Errorf("%q: len(SubExpNames) = %d, want %d", c.input, len(names), n)
 			continue
 		}
 		if c.names != nil {
 			for i := 0; i < 1+n; i++ {
 				if names[i] != c.names[i] {
-					t.Errorf("%q: SubexpNames[%d] = %q, want %q", c.input, i, names[i], c.names[i])
+					t.Errorf("%q: SubExpNames[%d] = %q, want %q", c.input, i, names[i], c.names[i])
 				}
 			}
 		}

@@ -13,7 +13,7 @@ import (
 	"log"
 	"runtime"
 
-	"github.com/martinolsen/go-pcre"
+	"github.com/wrapp/go-pcre"
 )
 
 func MatchString(pattern string, s string) (bool, error) {
@@ -34,7 +34,7 @@ type Regexp struct {
 func Compile(expr string) (*Regexp, error) {
 	// TODO - pcre.Study
 
-	if re, err := pcre.Compile(expr, pcre.Utf8|pcre.Dupnames, nil); err != nil {
+	if re, err := pcre.Compile(expr, pcre.UTF8|pcre.DupNames, nil); err != nil {
 		return nil, err
 	} else {
 		regexp := &Regexp{expr: expr, pcre: re}
@@ -43,11 +43,11 @@ func Compile(expr string) (*Regexp, error) {
 	}
 }
 
-func CompilePOSIX(expr string) (*Regexp, error) {
+func CompilePOSIX(_ string) (*Regexp, error) {
 	return nil, fmt.Errorf("TODO - CompilePOSIX")
 }
 
-func Match(pattern string, b []byte) (matched bool, err error) {
+func Match(_ string, _ []byte) (matched bool, err error) {
 	return false, fmt.Errorf("TODO - Match")
 }
 
@@ -72,7 +72,7 @@ func (re *Regexp) Match(b []byte) bool {
 }
 
 func (re *Regexp) MatchString(s string) bool {
-	if err := re.pcre.Exec(nil, s, 0, 0, nil); err == pcre.ErrNomatch {
+	if err := re.pcre.Exec(nil, s, 0, 0, nil); err == pcre.ErrNoMatch {
 		return false
 	} else if err < 0 {
 		panic("dont know what to do")
@@ -81,7 +81,7 @@ func (re *Regexp) MatchString(s string) bool {
 	return true
 }
 
-func MatchReader(pattern string, r io.RuneReader) (matched bool, err error) {
+func MatchReader(_ string, _ io.RuneReader) (matched bool, err error) {
 	return false, fmt.Errorf("TODO - MatchReader")
 }
 
@@ -107,16 +107,16 @@ func (re *Regexp) FindAllIndex(b []byte, n int) [][]int {
 	var locs [][]int
 	var options pcre.Option
 	for start := 0; start <= len(b) && n != 0; n-- {
-		ovector := make([]int, 3)
-		if e := re.pcre.Exec(nil, string(b), start, options, ovector); e == pcre.ErrNomatch {
+		oVector := make([]int, 3)
+		if e := re.pcre.Exec(nil, string(b), start, options, oVector); e == pcre.ErrNoMatch {
 			break
 		} else if e < 0 {
 			log.Panicf("while mathcing %q[%d:]: e: %d", b, start, e)
 		} else {
-			locs = append(locs, []int{ovector[0], ovector[1]})
+			locs = append(locs, []int{oVector[0], oVector[1]})
 		}
-		options |= pcre.NotemptyAtstart
-		start = ovector[1]
+		options |= pcre.NotEmptyAtStart
+		start = oVector[1]
 	}
 
 	return locs
@@ -133,12 +133,12 @@ func (re *Regexp) FindAllString(s string, n int) []string {
 func (re *Regexp) FindAllStringIndex(s string, n int) [][]int { return re.FindAllIndex([]byte(s), n) }
 
 func (re *Regexp) FindIndex(b []byte) []int {
-	ovector := make([]int, 3)
+	oVector := make([]int, 3)
 
-	if e := re.pcre.Exec(nil, string(b), 0, 0, ovector); e < pcre.ErrNomatch {
-		log.Panicf("e: %s", e)
+	if e := re.pcre.Exec(nil, string(b), 0, 0, oVector); e < pcre.ErrNoMatch {
+		log.Panicf("e: %d", e)
 	} else if e >= 0 {
-		return []int{ovector[0], ovector[1]}
+		return []int{oVector[0], oVector[1]}
 	}
 
 	return nil
@@ -191,16 +191,16 @@ func (re *Regexp) FindAllSubmatchIndex(b []byte, n int) [][]int {
 	var locs [][]int
 	var options pcre.Option
 	for start := 0; start <= len(b) && n != 0; n-- {
-		ovector := make([]int, (1+re.pcre.Capturecount())*3)
-		if e := re.pcre.Exec(nil, string(b), start, options, ovector); e == pcre.ErrNomatch {
+		oVector := make([]int, (1+re.pcre.CaptureCount())*3)
+		if e := re.pcre.Exec(nil, string(b), start, options, oVector); e == pcre.ErrNoMatch {
 			break
 		} else if e < 0 {
 			log.Panicf("while matching %q[%d:]: %d", b, start, e)
 		} else {
-			locs = append(locs, ovector[:(1+re.pcre.Capturecount())*2])
+			locs = append(locs, oVector[:(1+re.pcre.CaptureCount())*2])
 		}
-		options |= pcre.NotemptyAtstart
-		start = ovector[1]
+		options |= pcre.NotEmptyAtStart
+		start = oVector[1]
 	}
 
 	return locs
@@ -229,15 +229,15 @@ func (re *Regexp) FindStringSubmatch(s string) []string {
 
 func (re *Regexp) FindSubmatchIndex(b []byte) []int {
 	var t = string(b) == "aacc" || re.expr == "(a){0}"
-	ovector := make([]int, (1+re.pcre.Capturecount())*3)
-	if e := re.pcre.Exec(nil, string(b), 0, 0, ovector); e == pcre.ErrNomatch {
+	oVector := make([]int, (1+re.pcre.CaptureCount())*3)
+	if e := re.pcre.Exec(nil, string(b), 0, 0, oVector); e == pcre.ErrNoMatch {
 		return nil
 	} else if e < 0 {
-		log.Panicf("e: %s", e)
+		log.Panicf("e: %d", e)
 	} else if t {
-		log.Printf("expr: %q, b: %q, e: %d, ovector: %#v, %#v", re.expr, b, e, ovector, ovector[:(1+re.pcre.Capturecount())*2])
+		log.Printf("expr: %q, b: %q, e: %d, oVector: %#v, %#v", re.expr, b, e, oVector, oVector[:(1+re.pcre.CaptureCount())*2])
 	}
-	return ovector[:(1+re.pcre.Capturecount())*2]
+	return oVector[:(1+re.pcre.CaptureCount())*2]
 }
 
 func (re *Regexp) FindStringSubmatchIndex(s string) []int {
@@ -261,18 +261,18 @@ func (re *Regexp) Split(s string, n int) []string { return nil }
 
 func (re *Regexp) String() string { return re.expr } // TODO
 
-func (re *Regexp) NumSubexp() int {
-	return re.pcre.Capturecount() // TODO - is this correct? or do they mean *all* groups?
+func (re *Regexp) NumSubExp() int {
+	return re.pcre.CaptureCount() // TODO - is this correct? or do they mean *all* groups?
 }
 
-func (re *Regexp) SubexpNames() []string { return re.pcre.Nametable() }
+func (re *Regexp) SubExpNames() []string { return re.pcre.NameTable() }
 
 func readAllRunes(r io.RuneReader) ([]byte, error) {
 	data := new(bytes.Buffer)
 	for {
-		if rune, _, err := r.ReadRune(); err != nil {
+		if readRune, _, err := r.ReadRune(); err != nil {
 			break
-		} else if _, err := data.WriteRune(rune); err != nil {
+		} else if _, err := data.WriteRune(readRune); err != nil {
 			return nil, err
 		}
 	}
