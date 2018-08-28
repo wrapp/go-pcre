@@ -102,12 +102,12 @@ func extract(str string) (name string, num int, rest string, ok bool) {
 
 	// Parse number.
 	num = 0
-	for i := 0; i < len(name); i++ {
-		if name[i] < '0' || '9' < name[i] || num >= 1e8 {
+	for j := 0; j < len(name); j++ {
+		if name[j] < '0' || '9' < name[j] || num >= 1e8 {
 			num = -1
 			break
 		}
-		num = num*10 + int(name[i]) - '0'
+		num = num*10 + int(name[j]) - '0'
 	}
 	// Disallow leading zeros.
 	if name[0] == '0' && len(name) > 1 {
