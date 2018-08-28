@@ -92,18 +92,18 @@ const (
 
 type PCRE C.struct_real_pcre
 
-func Compile(expr string, options Option, table interface{}) (*PCRE, error) {
+func Compile(expr string, options Option, _ interface{}) (*PCRE, error) {
 	var (
-		errptr    *C.char
-		erroffset C.int
+		errPtr    *C.char
+		errOffset C.int
 	)
 
 	pattern := C.CString(expr)
 	defer C.free(unsafe.Pointer(pattern))
 
-	re := C.pcre_compile(pattern, C.int(options), &errptr, &erroffset, nil)
+	re := C.pcre_compile(pattern, C.int(options), &errPtr, &errOffset, nil)
 	if re == nil {
-		return nil, errors.New(C.GoString(errptr))
+		return nil, errors.New(C.GoString(errPtr))
 	}
 
 	return (*PCRE)(re), nil
@@ -111,24 +111,24 @@ func Compile(expr string, options Option, table interface{}) (*PCRE, error) {
 
 func (pcre *PCRE) Free() { C.call_pcre_free(unsafe.Pointer(pcre)) }
 
-func (pcre *PCRE) Exec(extra interface{}, subject string, startoffset int, options Option, ovector []int) Error {
+func (pcre *PCRE) Exec(extra interface{}, subject string, startOffset int, options Option, oVector []int) Error {
 	subjectCStr := C.CString(subject)
 	defer C.free(unsafe.Pointer(subjectCStr))
 
-	ovectorC := make([]C.int, len(ovector))
-	for n, i := range ovector {
-		ovectorC[n] = C.int(i)
+	oVectorC := make([]C.int, len(oVector))
+	for n, i := range oVector {
+		oVectorC[n] = C.int(i)
 	}
 
-	var ovectorPtr *C.int
-	if len(ovector) > 0 {
-		ovectorPtr = &ovectorC[0]
+	var oVectorPtr *C.int
+	if len(oVector) > 0 {
+		oVectorPtr = &oVectorC[0]
 	}
 
-	r := C.pcre_exec((*C.struct_real_pcre8_or_16)(pcre), nil, subjectCStr, C.int(len(subject)), C.int(startoffset), C.int(options), ovectorPtr, C.int(len(ovector)))
+	r := C.pcre_exec((*C.struct_real_pcre8_or_16)(pcre), nil, subjectCStr, C.int(len(subject)), C.int(startOffset), C.int(options), oVectorPtr, C.int(len(oVector)))
 
-	for n, i := range ovectorC {
-		ovector[n] = int(i)
+	for n, i := range oVectorC {
+		oVector[n] = int(i)
 	}
 
 	return Error(r)
