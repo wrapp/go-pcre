@@ -19,7 +19,7 @@ import (
 )
 
 const (
-	Major int = C.PCRE_MAJOR
+	Major  = C.PCRE_MAJOR
 	Minor     = C.PCRE_MINOR
 	Date      = C.PCRE_DATE
 )
@@ -27,7 +27,7 @@ const (
 type Option int
 
 const (
-	Caseless         Option = C.PCRE_CASELESS
+	Caseless          = C.PCRE_CASELESS
 	Multiline               = C.PCRE_MULTILINE
 	Dotall                  = C.PCRE_DOTALL
 	Extended                = C.PCRE_EXTENDED
@@ -68,7 +68,7 @@ const (
 type Info int
 
 const (
-	InfoOptions       Info = C.PCRE_INFO_OPTIONS
+	InfoOptions        = C.PCRE_INFO_OPTIONS
 	InfoSize               = C.PCRE_INFO_SIZE
 	InfoCapturecount       = C.PCRE_INFO_CAPTURECOUNT
 	InfoBackrefmax         = C.PCRE_INFO_BACKREFMAX
