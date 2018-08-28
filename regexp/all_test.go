@@ -381,13 +381,13 @@ func TestLiteralPrefix(t *testing.T) {
 	}
 }
 
-type subexpCase struct {
+type subExpCase struct {
 	input string
 	num   int
 	names []string
 }
 
-var subexpCases = []subexpCase{
+var subExpCases = []subExpCase{
 	{``, 0, nil},
 	{`.*`, 0, nil},
 	{`abba`, 0, nil},
@@ -401,8 +401,8 @@ var subexpCases = []subexpCase{
 	{`(?P<foo>.*)(?P<bar>(a)b)(?P<foo>.*)a`, 4, []string{"", "foo", "bar", "", "foo"}},
 }
 
-func TestSubexp(t *testing.T) {
-	for _, c := range subexpCases {
+func TestSubExp(t *testing.T) {
+	for _, c := range subExpCases {
 		re := MustCompile(c.input)
 		n := re.NumSubExp()
 		if n != c.num {

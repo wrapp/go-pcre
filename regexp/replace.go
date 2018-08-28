@@ -18,13 +18,13 @@ func (re *Regexp) ReplaceAll(src, repl []byte) []byte {
 	})
 }
 
-func (re *Regexp) ReplaceAllString(src, repl string) string {
-	return string(re.ReplaceAll([]byte(src), []byte(repl)))
+func (re *Regexp) ReplaceAllString(original, replacement string) string {
+	return string(re.ReplaceAll([]byte(original), []byte(replacement)))
 }
 
-func (re *Regexp) ReplaceAllLiteral(src, repl []byte) []byte {
-	return re.replaceAll(src, func(dst []byte, _ []int) []byte {
-		return append(dst, repl...)
+func (re *Regexp) ReplaceAllLiteral(original, replacement []byte) []byte {
+	return re.replaceAll(original, func(dst []byte, _ []int) []byte {
+		return append(dst, replacement...)
 	})
 }
 
@@ -81,8 +81,8 @@ func extract(str string) (name string, num int, rest string, ok bool) {
 	}
 	i := 0
 	for i < len(str) {
-		rune, size := utf8.DecodeRuneInString(str[i:])
-		if !unicode.IsLetter(rune) && !unicode.IsDigit(rune) && rune != '_' {
+		decodedRune, size := utf8.DecodeRuneInString(str[i:])
+		if !unicode.IsLetter(decodedRune) && !unicode.IsDigit(decodedRune) && decodedRune != '_' {
 			break
 		}
 		i += size
@@ -119,33 +119,33 @@ func extract(str string) (name string, num int, rest string, ok bool) {
 	return
 }
 
-func (re *Regexp) replaceAll(src []byte, repl func([]byte, []int) []byte) []byte {
+func (re *Regexp) replaceAll(original []byte, replacement func([]byte, []int) []byte) []byte {
 	var dst []byte
-	locs := re.FindAllSubmatchIndex(src, -1)
+	locs := re.FindAllSubmatchIndex(original, -1)
 	var srci int
 	for i := 0; i < len(locs); i++ {
-		dst = append(dst, src[srci:locs[i][0]]...)
-		dst = repl(dst, locs[i])
+		dst = append(dst, original[srci:locs[i][0]]...)
+		dst = replacement(dst, locs[i])
 		srci = locs[i][1]
 	}
-	if srci < len(src) {
-		dst = append(dst, src[srci:]...)
+	if srci < len(original) {
+		dst = append(dst, original[srci:]...)
 	}
 	return dst
 }
 
-func (re *Regexp) ReplaceAllLiteralString(src, repl string) string {
-	return string(re.ReplaceAllLiteral([]byte(src), []byte(repl)))
+func (re *Regexp) ReplaceAllLiteralString(original, replacement string) string {
+	return string(re.ReplaceAllLiteral([]byte(original), []byte(replacement)))
 }
 
-func (re *Regexp) ReplaceAllFunc(src []byte, repl func([]byte) []byte) []byte {
-	return re.replaceAll(src, func(dst []byte, match []int) []byte {
-		return append(dst, repl(src[match[0]:match[1]])...)
+func (re *Regexp) ReplaceAllFunc(original []byte, replacement func([]byte) []byte) []byte {
+	return re.replaceAll(original, func(dst []byte, match []int) []byte {
+		return append(dst, replacement(original[match[0]:match[1]])...)
 	})
 }
 
-func (re *Regexp) ReplaceAllStringFunc(src string, repl func(string) string) string {
-	return string(re.replaceAll([]byte(src), func(dst []byte, match []int) []byte {
-		return append(dst, []byte(repl(string(src[match[0]:match[1]])))...)
+func (re *Regexp) ReplaceAllStringFunc(original string, replacement func(string) string) string {
+	return string(re.replaceAll([]byte(original), func(dst []byte, match []int) []byte {
+		return append(dst, []byte(replacement(string(original[match[0]:match[1]])))...)
 	}))
 }
