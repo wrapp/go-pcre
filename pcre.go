@@ -27,67 +27,67 @@ const (
 type Option int
 
 const (
-	Caseless          = C.PCRE_CASELESS
-	Multiline               = C.PCRE_MULTILINE
-	Dotall                  = C.PCRE_DOTALL
-	Extended                = C.PCRE_EXTENDED
-	Anchored                = C.PCRE_ANCHORED
-	DollarEndonly           = C.PCRE_DOLLAR_ENDONLY
-	Extra                   = C.PCRE_EXTRA
-	Notbol                  = C.PCRE_NOTBOL
-	Noteol                  = C.PCRE_NOTEOL
-	Ungreedy                = C.PCRE_UNGREEDY
-	Notempty                = C.PCRE_NOTEMPTY
-	Utf8                    = C.PCRE_UTF8
-	Utf16                   = C.PCRE_UTF16
-	NoAutoCapture           = C.PCRE_NO_AUTO_CAPTURE
-	NoUtf8Check             = C.PCRE_NO_UTF8_CHECK
-	NoUtf16Check            = C.PCRE_NO_UTF16_CHECK
-	AutoCallout             = C.PCRE_AUTO_CALLOUT
-	PartialSoft             = C.PCRE_PARTIAL_SOFT
-	Partial                 = C.PCRE_PARTIAL
-	DfaShortest             = C.PCRE_DFA_SHORTEST
-	DfaRestart              = C.PCRE_DFA_RESTART
-	Firstline               = C.PCRE_FIRSTLINE
-	Dupnames                = C.PCRE_DUPNAMES
-	NewlineCr               = C.PCRE_NEWLINE_CR
-	NewlineLf               = C.PCRE_NEWLINE_LF
-	NewlineCrlf             = C.PCRE_NEWLINE_CRLF
-	NewlineAny              = C.PCRE_NEWLINE_ANY
-	NewlineAnycrlf          = C.PCRE_NEWLINE_ANYCRLF
-	BsrAnycrlf              = C.PCRE_BSR_ANYCRLF
-	BsrUnicode              = C.PCRE_BSR_UNICODE
-	JavascriptCompat        = C.PCRE_JAVASCRIPT_COMPAT
-	NoStartOptimize         = C.PCRE_NO_START_OPTIMIZE
-	NoStartOptimise         = C.PCRE_NO_START_OPTIMISE
-	PartialHard             = C.PCRE_PARTIAL_HARD
-	NotemptyAtstart         = C.PCRE_NOTEMPTY_ATSTART
-	Ucp                     = C.PCRE_UCP
+	Caseless      = C.PCRE_CASELESS
+	Multiline     = C.PCRE_MULTILINE
+	DotAll        = C.PCRE_DOTALL
+	Extended      = C.PCRE_EXTENDED
+	Anchored      = C.PCRE_ANCHORED
+	DollarEndOnly = C.PCRE_DOLLAR_ENDONLY
+	Extra         = C.PCRE_EXTRA
+	NotBOL        = C.PCRE_NOTBOL
+	NotEOL        = C.PCRE_NOTEOL
+	UnGreedy         = C.PCRE_UNGREEDY
+	NotEmpty         = C.PCRE_NOTEMPTY
+	UTF8             = C.PCRE_UTF8
+	UTF16            = C.PCRE_UTF16
+	NoAutoCapture    = C.PCRE_NO_AUTO_CAPTURE
+	NoUTF8Check      = C.PCRE_NO_UTF8_CHECK
+	NoUTF16Check     = C.PCRE_NO_UTF16_CHECK
+	AutoCallout      = C.PCRE_AUTO_CALLOUT
+	PartialSoft      = C.PCRE_PARTIAL_SOFT
+	Partial          = C.PCRE_PARTIAL
+	DFAShortest      = C.PCRE_DFA_SHORTEST
+	DFARestart       = C.PCRE_DFA_RESTART
+	FirstLine        = C.PCRE_FIRSTLINE
+	DupNames         = C.PCRE_DUPNAMES
+	NewlineCR        = C.PCRE_NEWLINE_CR
+	NewlineLF        = C.PCRE_NEWLINE_LF
+	NewlineCRLF      = C.PCRE_NEWLINE_CRLF
+	NewlineAny       = C.PCRE_NEWLINE_ANY
+	NewlineAnyCRLF   = C.PCRE_NEWLINE_ANYCRLF
+	BSRAnyCRLF       = C.PCRE_BSR_ANYCRLF
+	BSRUnicode       = C.PCRE_BSR_UNICODE
+	JavascriptCompat = C.PCRE_JAVASCRIPT_COMPAT
+	NoStartOptimize  = C.PCRE_NO_START_OPTIMIZE
+	NoStartOptimise  = C.PCRE_NO_START_OPTIMISE // <3 Rule britannia
+	PartialHard      = C.PCRE_PARTIAL_HARD
+	NotEmptyAtStart  = C.PCRE_NOTEMPTY_ATSTART
+	UCP              = C.PCRE_UCP
 )
 
 type Info int
 
 const (
-	InfoOptions        = C.PCRE_INFO_OPTIONS
-	InfoSize               = C.PCRE_INFO_SIZE
-	InfoCapturecount       = C.PCRE_INFO_CAPTURECOUNT
-	InfoBackrefmax         = C.PCRE_INFO_BACKREFMAX
-	InfoFirstbyte          = C.PCRE_INFO_FIRSTBYTE
-	InfoFirstchar          = C.PCRE_INFO_FIRSTCHAR // For backwards compatibility
-	InfoFirsttable         = C.PCRE_INFO_FIRSTTABLE
-	InfoLastliteral        = C.PCRE_INFO_LASTLITERAL
-	InfoNameentrysize      = C.PCRE_INFO_NAMEENTRYSIZE
-	InfoNamecount          = C.PCRE_INFO_NAMECOUNT
-	InfoNametable          = C.PCRE_INFO_NAMETABLE
-	InfoStudysize          = C.PCRE_INFO_STUDYSIZE
-	InfoDefaultTables      = C.PCRE_INFO_DEFAULT_TABLES
-	InfoOkpartial          = C.PCRE_INFO_OKPARTIAL
-	InfoJchanged           = C.PCRE_INFO_JCHANGED
-	InfoHascrorlf          = C.PCRE_INFO_HASCRORLF
-	InfoMinlength          = C.PCRE_INFO_MINLENGTH
-	InfoJit                = C.PCRE_INFO_JIT
-	InfoJitsize            = C.PCRE_INFO_JITSIZE
-	InfoMaxlookbehind      = C.PCRE_INFO_MAXLOOKBEHIND
+	InfoOptions       = C.PCRE_INFO_OPTIONS
+	InfoSize          = C.PCRE_INFO_SIZE
+	InfoCaptureCount  = C.PCRE_INFO_CAPTURECOUNT
+	InfoBackrefMax    = C.PCRE_INFO_BACKREFMAX
+	InfoFirstByte     = C.PCRE_INFO_FIRSTBYTE
+	InfoFirstChar     = C.PCRE_INFO_FIRSTCHAR // For backwards compatibility
+	InfoFirstTable    = C.PCRE_INFO_FIRSTTABLE
+	InfoLastLiteral   = C.PCRE_INFO_LASTLITERAL
+	InfoNameEntrySize = C.PCRE_INFO_NAMEENTRYSIZE
+	InfoNameCount     = C.PCRE_INFO_NAMECOUNT
+	InfoNameTable     = C.PCRE_INFO_NAMETABLE
+	InfoStudySize     = C.PCRE_INFO_STUDYSIZE
+	InfoDefaultTables = C.PCRE_INFO_DEFAULT_TABLES
+	InfoOkPartial     = C.PCRE_INFO_OKPARTIAL
+	InfoJchanged      = C.PCRE_INFO_JCHANGED
+	InfoHasCRorLF     = C.PCRE_INFO_HASCRORLF
+	InfoMinLength     = C.PCRE_INFO_MINLENGTH
+	InfoJIT           = C.PCRE_INFO_JIT
+	InfoJITSize       = C.PCRE_INFO_JITSIZE
+	InfoMaxLookBehind = C.PCRE_INFO_MAXLOOKBEHIND
 )
 
 type PCRE C.struct_real_pcre
@@ -136,7 +136,7 @@ func (pcre *PCRE) Exec(extra interface{}, subject string, startoffset int, optio
 
 func (pcre *PCRE) CaptureCount() int {
 	var i C.int
-	if rc := C.pcre_fullinfo((*C.struct_real_pcre8_or_16)(pcre), nil, InfoCapturecount, unsafe.Pointer(&i)); rc != 0 {
+	if rc := C.pcre_fullinfo((*C.struct_real_pcre8_or_16)(pcre), nil, InfoCaptureCount, unsafe.Pointer(&i)); rc != 0 {
 		panic("pcre_fullinfo")
 	}
 	return int(i)
@@ -144,7 +144,7 @@ func (pcre *PCRE) CaptureCount() int {
 
 func (pcre *PCRE) NameCount() int {
 	var i C.int
-	if rc := C.pcre_fullinfo((*C.struct_real_pcre8_or_16)(pcre), nil, InfoNamecount, unsafe.Pointer(&i)); rc != 0 {
+	if rc := C.pcre_fullinfo((*C.struct_real_pcre8_or_16)(pcre), nil, InfoNameCount, unsafe.Pointer(&i)); rc != 0 {
 		panic("pcre_fullinfo")
 	}
 	return int(i)
@@ -152,7 +152,7 @@ func (pcre *PCRE) NameCount() int {
 
 func (pcre *PCRE) NameEntrySize() int {
 	var i C.int
-	if rc := C.pcre_fullinfo((*C.struct_real_pcre8_or_16)(pcre), nil, InfoNameentrysize, unsafe.Pointer(&i)); rc != 0 {
+	if rc := C.pcre_fullinfo((*C.struct_real_pcre8_or_16)(pcre), nil, InfoNameEntrySize, unsafe.Pointer(&i)); rc != 0 {
 		panic("pcre_fullinfo")
 	}
 	return int(i)
@@ -165,7 +165,7 @@ func (pcre *PCRE) NameTable() []string {
 	}
 
 	var dataPtr uintptr
-	if rc := C.pcre_fullinfo((*C.struct_real_pcre8_or_16)(pcre), nil, InfoNametable, unsafe.Pointer(&dataPtr)); rc != 0 {
+	if rc := C.pcre_fullinfo((*C.struct_real_pcre8_or_16)(pcre), nil, InfoNameTable, unsafe.Pointer(&dataPtr)); rc != 0 {
 		log.Panicf("pcre_fullinfo: %d", rc)
 	}
 
