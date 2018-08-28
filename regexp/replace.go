@@ -146,6 +146,6 @@ func (re *Regexp) ReplaceAllFunc(original []byte, replacement func([]byte) []byt
 
 func (re *Regexp) ReplaceAllStringFunc(original string, replacement func(string) string) string {
 	return string(re.replaceAll([]byte(original), func(dst []byte, match []int) []byte {
-		return append(dst, []byte(replacement(string(original[match[0]:match[1]])))...)
+		return append(dst, []byte(replacement(original[match[0]:match[1]]))...)
 	}))
 }
