@@ -137,7 +137,7 @@ func (pcre *PCRE) Exec(extra interface{}, subject string, startOffset int, optio
 func (pcre *PCRE) CaptureCount() int {
 	var i C.int
 	if rc := C.pcre_fullinfo((*C.struct_real_pcre8_or_16)(pcre), nil, InfoCaptureCount, unsafe.Pointer(&i)); rc != 0 {
-		panic("pcre_fullinfo")
+		log.Panicf("pcre_fullinfo: %v", rc)
 	}
 	return int(i)
 }
@@ -145,7 +145,7 @@ func (pcre *PCRE) CaptureCount() int {
 func (pcre *PCRE) NameCount() int {
 	var i C.int
 	if rc := C.pcre_fullinfo((*C.struct_real_pcre8_or_16)(pcre), nil, InfoNameCount, unsafe.Pointer(&i)); rc != 0 {
-		panic("pcre_fullinfo")
+		log.Panicf("pcre_fullinfo: %v", rc)
 	}
 	return int(i)
 }
@@ -153,7 +153,7 @@ func (pcre *PCRE) NameCount() int {
 func (pcre *PCRE) NameEntrySize() int {
 	var i C.int
 	if rc := C.pcre_fullinfo((*C.struct_real_pcre8_or_16)(pcre), nil, InfoNameEntrySize, unsafe.Pointer(&i)); rc != 0 {
-		panic("pcre_fullinfo")
+		log.Panicf("pcre_fullinfo: %v", rc)
 	}
 	return int(i)
 }
@@ -166,7 +166,7 @@ func (pcre *PCRE) NameTable() []string {
 
 	var dataPtr uintptr
 	if rc := C.pcre_fullinfo((*C.struct_real_pcre8_or_16)(pcre), nil, InfoNameTable, unsafe.Pointer(&dataPtr)); rc != 0 {
-		log.Panicf("pcre_fullinfo: %d", rc)
+		log.Panicf("pcre_fullinfo: %v", rc)
 	}
 
 	var data = *(*[]byte)(unsafe.Pointer(
