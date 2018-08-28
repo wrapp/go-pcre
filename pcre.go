@@ -193,7 +193,7 @@ type Error int
 const (
 	ErrNoMatch       = C.PCRE_ERROR_NOMATCH
 	ErrNull          = C.PCRE_ERROR_NULL
-	ErrBadoption     = C.PCRE_ERROR_BADOPTION
+	ErrBadOption     = C.PCRE_ERROR_BADOPTION
 	ErrBadMagic      = C.PCRE_ERROR_BADMAGIC
 	ErrUnknownOpcode = C.PCRE_ERROR_UNKNOWN_OPCODE
 )
