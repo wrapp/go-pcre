@@ -10,6 +10,12 @@ package pcre
 //
 import "C"
 
+import (
+	"log"
+	"reflect"
+	"unsafe"
+)
+
 func (pcre *PCRE) Free() { C.call_pcre_free(unsafe.Pointer(pcre)) }
 
 func (pcre *PCRE) Exec(extra interface{}, subject string, startOffset int, options Option, oVector []int) Error {
