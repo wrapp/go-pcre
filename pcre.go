@@ -13,9 +13,9 @@ import "C"
 
 import (
 	"errors"
-	"unsafe"
-	"reflect"
 	"log"
+	"reflect"
+	"unsafe"
 )
 
 const (
@@ -125,7 +125,7 @@ func (pcre *PCRE) Exec(extra interface{}, subject string, startoffset int, optio
 		ovectorPtr = &ovectorC[0]
 	}
 
-	r := C.pcre_exec((*C.struct_real_pcre)(pcre), nil, subjectCStr, C.int(len(subject)), C.int(startoffset), C.int(options), ovectorPtr, C.int(len(ovector)))
+	r := C.pcre_exec((*C.struct_real_pcre8_or_16)(pcre), nil, subjectCStr, C.int(len(subject)), C.int(startoffset), C.int(options), ovectorPtr, C.int(len(ovector)))
 
 	for n, i := range ovectorC {
 		ovector[n] = int(i)
@@ -136,7 +136,7 @@ func (pcre *PCRE) Exec(extra interface{}, subject string, startoffset int, optio
 
 func (pcre *PCRE) Capturecount() int {
 	var i C.int
-	if rc := C.pcre_fullinfo((*C.struct_real_pcre)(pcre), nil, InfoCapturecount, unsafe.Pointer(&i)); rc != 0 {
+	if rc := C.pcre_fullinfo((*C.struct_real_pcre8_or_16)(pcre), nil, InfoCapturecount, unsafe.Pointer(&i)); rc != 0 {
 		panic("pcre_fullinfo")
 	}
 	return int(i)
@@ -144,7 +144,7 @@ func (pcre *PCRE) Capturecount() int {
 
 func (pcre *PCRE) Namecount() int {
 	var i C.int
-	if rc := C.pcre_fullinfo((*C.struct_real_pcre)(pcre), nil, InfoNamecount, unsafe.Pointer(&i)); rc != 0 {
+	if rc := C.pcre_fullinfo((*C.struct_real_pcre8_or_16)(pcre), nil, InfoNamecount, unsafe.Pointer(&i)); rc != 0 {
 		panic("pcre_fullinfo")
 	}
 	return int(i)
@@ -152,7 +152,7 @@ func (pcre *PCRE) Namecount() int {
 
 func (pcre *PCRE) Nameentrysize() int {
 	var i C.int
-	if rc := C.pcre_fullinfo((*C.struct_real_pcre)(pcre), nil, InfoNameentrysize, unsafe.Pointer(&i)); rc != 0 {
+	if rc := C.pcre_fullinfo((*C.struct_real_pcre8_or_16)(pcre), nil, InfoNameentrysize, unsafe.Pointer(&i)); rc != 0 {
 		panic("pcre_fullinfo")
 	}
 	return int(i)
@@ -165,20 +165,20 @@ func (pcre *PCRE) Nametable() []string {
 	}
 
 	var dataPtr uintptr
-	if rc := C.pcre_fullinfo((*C.struct_real_pcre)(pcre), nil, InfoNametable, unsafe.Pointer(&dataPtr)); rc != 0 {
+	if rc := C.pcre_fullinfo((*C.struct_real_pcre8_or_16)(pcre), nil, InfoNametable, unsafe.Pointer(&dataPtr)); rc != 0 {
 		log.Panicf("pcre_fullinfo: %d", rc)
 	}
 
 	var data []byte = *(*[]byte)(unsafe.Pointer(
 		&reflect.SliceHeader{
 			Data: dataPtr,
-			Len: pcre.Namecount() * pcre.Nameentrysize(),
-			Cap: pcre.Namecount() * pcre.Nameentrysize(),
+			Len:  pcre.Namecount() * pcre.Nameentrysize(),
+			Cap:  pcre.Namecount() * pcre.Nameentrysize(),
 		}))
 
 	for i := 0; i < len(data); {
 		n := (int(data[i]) << 8) | int(data[i+1])
-		s := string(data[i+2:i+pcre.Nameentrysize()-1])
+		s := string(data[i+2 : i+pcre.Nameentrysize()-1])
 
 		names[n] = s
 
@@ -191,11 +191,11 @@ func (pcre *PCRE) Nametable() []string {
 type Error int
 
 const (
-	ErrNomatch       Error = C.PCRE_ERROR_NOMATCH
-	ErrNull                = C.PCRE_ERROR_NULL
-	ErrBadoption           = C.PCRE_ERROR_BADOPTION
-	ErrBadMagic            = C.PCRE_ERROR_BADMAGIC
-	ErrUnknownOpcode       = C.PCRE_ERROR_UNKNOWN_OPCODE
+	ErrNomatch       = C.PCRE_ERROR_NOMATCH
+	ErrNull          = C.PCRE_ERROR_NULL
+	ErrBadoption     = C.PCRE_ERROR_BADOPTION
+	ErrBadMagic      = C.PCRE_ERROR_BADMAGIC
+	ErrUnknownOpcode = C.PCRE_ERROR_UNKNOWN_OPCODE
 )
 
 /*
