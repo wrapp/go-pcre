@@ -79,7 +79,11 @@ func (re *Regexp) Match(b []byte) bool {
 }
 
 func (re *Regexp) MatchString(s string) bool {
-	if err := re.pcre.Exec(re.pcreExtra, s, 0, 0, nil); err == pcre.ErrNoMatch {
+	var extra interface{} = nil
+	if re.pcreExtra != nil {
+		extra = re.pcreExtra
+	}
+	if err := re.pcre.Exec(extra, s, 0, 0, nil); err == pcre.ErrNoMatch {
 		return false
 	} else if err < 0 {
 		panic("dont know what to do")

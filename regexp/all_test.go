@@ -8,8 +8,6 @@ import (
 	"reflect"
 	"strings"
 	"testing"
-
-	"github.com/wrapp/go-pcre"
 )
 
 var goodRegex = []string{
@@ -64,13 +62,12 @@ func compileTest(t *testing.T, expr string, error string) *Regexp {
 	return re
 }
 
-func studyTest(t *testing.T, expr *Regexp) *pcre.PCREExtra {
-	studyRe, err := Study(expr.pcre)
+func studyTest(t *testing.T, expr *Regexp)  {
+	err := expr.Study()
 	if err != nil {
 		t.Errorf("Unable to Study. PCRE may have ADHD: %s", err.Error())
 	}
 
-	return studyRe
 }
 
 func TestStudy(t *testing.T) {
