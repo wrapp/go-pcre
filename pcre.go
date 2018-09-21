@@ -21,6 +21,8 @@ const (
 	Date      = C.PCRE_DATE
 )
 
+const StudyJITCompile = C.PCRE_STUDY_JIT_COMPILE
+
 type Option int
 
 const (

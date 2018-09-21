@@ -44,7 +44,7 @@ func Compile(expr string) (*Regexp, error) {
 }
 
 func (re *Regexp) Study() (err error) {
-	re.pcreExtra, err = pcre.Study(re.pcre, 0, nil)
+	re.pcreExtra, err = pcre.Study(re.pcre, pcre.StudyJITCompile, nil)
 	return
 
 //	runtime.SetFinalizer(study, func(study *pcre.PCREExtra) { study.Free() })
