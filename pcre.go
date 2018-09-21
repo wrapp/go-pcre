@@ -114,7 +114,7 @@ func Study(code *PCRE, options Option, _ interface{}) (*PCREExtra, error) {
 	var errPtr *C.char
 
 	re := C.pcre_study((*C.struct_real_pcre8_or_16)(code), C.int(options), &errPtr)
-	if re != nil {
+	if errPtr != nil {
 		return nil, errors.New(C.GoString(errPtr))
 	}
 
