@@ -43,14 +43,11 @@ func Compile(expr string) (*Regexp, error) {
 	return regexp, nil
 }
 
-func Study(compiledExp *pcre.PCRE) (*pcre.PCREExtra, error) {
-	study, err := pcre.Study(compiledExp, 0, nil)
-	if err != nil {
-		return nil, err
-	}
+func (re *Regexp) Study() (err error) {
+	re.pcreExtra, err = pcre.Study(re.pcre, 0, nil)
+	return
 
 //	runtime.SetFinalizer(study, func(study *pcre.PCREExtra) { study.Free() })
-	return study, nil
 }
 
 func CompilePOSIX(_ string) (*Regexp, error) {
