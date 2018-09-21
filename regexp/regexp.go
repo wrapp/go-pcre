@@ -39,15 +39,18 @@ func Compile(expr string) (*Regexp, error) {
 	}
 
 	regexp := &Regexp{expr: expr, pcre: re}
-	runtime.SetFinalizer(regexp, func(re *Regexp) { re.pcre.Free() })
+	runtime.SetFinalizer(regexp, func(re *Regexp) {
+		if re.pcreExtra != nil {
+			re.pcreExtra.Free()
+		}
+		re.pcre.Free()
+	})
 	return regexp, nil
 }
 
 func (re *Regexp) Study() (err error) {
 	re.pcreExtra, err = pcre.Study(re.pcre, pcre.StudyJITCompile, nil)
 	return
-
-//	runtime.SetFinalizer(study, func(study *pcre.PCREExtra) { study.Free() })
 }
 
 func CompilePOSIX(_ string) (*Regexp, error) {

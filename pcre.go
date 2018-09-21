@@ -4,10 +4,10 @@ package pcre
 // #include <pcre.h>
 // #include <string.h>
 //
-// void call_pcre_free(void *ptr)
-// {
+// void call_pcre_free(void* ptr) {
 //     pcre_free(ptr);
 // }
+//
 import "C"
 
 import (
@@ -113,12 +113,11 @@ type PCREExtra C.struct_pcre_extra
 func Study(code *PCRE, options Option, _ interface{}) (*PCREExtra, error) {
 	var errPtr *C.char
 
-	re := C.pcre_study((*C.struct_real_pcre8_or_16)(code), C.int(options), &errPtr)
+	extra := C.pcre_study((*C.struct_real_pcre8_or_16)(code), C.int(options), &errPtr)
 	if errPtr != nil {
 		return nil, errors.New(C.GoString(errPtr))
 	}
-
-	return (*PCREExtra)(re), nil
+	return (*PCREExtra)(extra), nil
 }
 
 type Error int

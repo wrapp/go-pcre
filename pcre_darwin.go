@@ -6,8 +6,7 @@ package pcre
 // #include <pcre.h>
 // #include <string.h>
 //
-// void call_pcre_free(void *ptr);
-// void prce_free_study(pcre_extra *ptr);
+// void call_pcre_free(void* ptr);
 //
 import "C"
 

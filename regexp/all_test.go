@@ -70,18 +70,9 @@ func studyTest(t *testing.T, expr *Regexp)  {
 
 }
 
-func TestStudy(t *testing.T) {
-	re, err := Compile("(a*|b)(c*|d)")
-	if err != nil {
-		t.Error("compiling expression for study test failed")
-	}
-
-	studyTest(t, re)
-}
-
-func TestGoodCompile(t *testing.T) {
+func TestGoodCompileAndStudy(t *testing.T) {
 	for i := 0; i < len(goodRegex); i++ {
-		compileTest(t, goodRegex[i], "")
+		studyTest(t, compileTest(t, goodRegex[i], ""))
 	}
 }
 
