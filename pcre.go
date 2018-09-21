@@ -87,7 +87,7 @@ const (
 	InfoMaxLookBehind = C.PCRE_INFO_MAXLOOKBEHIND
 )
 
-type PCRE C.struct_real_pcre
+type PCRE C.struct_real_pcre8_or_16
 
 func Compile(expr string, options Option, _ interface{}) (*PCRE, error) {
 	var (
@@ -104,6 +104,19 @@ func Compile(expr string, options Option, _ interface{}) (*PCRE, error) {
 	}
 
 	return (*PCRE)(re), nil
+}
+
+
+type PCREExtra C.struct_pcre_extra
+func Study(code *PCRE, options Option, _ interface{}) (*PCREExtra, error) {
+	var errPtr *C.char
+
+	re := C.pcre_study((*C.struct_real_pcre8_or_16)(code), C.int(options), &errPtr)
+	if re != nil {
+		return nil, errors.New(C.GoString(errPtr))
+	}
+
+	return (*PCREExtra)(re), nil
 }
 
 type Error int

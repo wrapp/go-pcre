@@ -29,10 +29,10 @@ func MatchString(pattern string, s string) (bool, error) {
 type Regexp struct {
 	expr string
 	pcre *pcre.PCRE
+	pcreExtra *pcre.PCREExtra
 }
 
 func Compile(expr string) (*Regexp, error) {
-	// TODO - pcre.Study
 	re, err := pcre.Compile(expr, pcre.UTF8|pcre.DupNames, nil)
 	if err != nil {
 		return nil, err
@@ -41,6 +41,16 @@ func Compile(expr string) (*Regexp, error) {
 	regexp := &Regexp{expr: expr, pcre: re}
 	runtime.SetFinalizer(regexp, func(re *Regexp) { re.pcre.Free() })
 	return regexp, nil
+}
+
+func Study(compiledExp *pcre.PCRE) (*pcre.PCREExtra, error) {
+	study, err := pcre.Study(compiledExp, 0, nil)
+	if err != nil {
+		return nil, err
+	}
+
+//	runtime.SetFinalizer(study, func(study *pcre.PCREExtra) { study.Free() })
+	return study, nil
 }
 
 func CompilePOSIX(_ string) (*Regexp, error) {
@@ -72,7 +82,7 @@ func (re *Regexp) Match(b []byte) bool {
 }
 
 func (re *Regexp) MatchString(s string) bool {
-	if err := re.pcre.Exec(nil, s, 0, 0, nil); err == pcre.ErrNoMatch {
+	if err := re.pcre.Exec(re.pcreExtra, s, 0, 0, nil); err == pcre.ErrNoMatch {
 		return false
 	} else if err < 0 {
 		panic("dont know what to do")

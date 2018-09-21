@@ -7,6 +7,7 @@ package pcre
 // #include <string.h>
 //
 // void call_pcre_free(void *ptr);
+// void prce_free_study(pcre_extra *ptr);
 //
 import "C"
 
@@ -15,6 +16,8 @@ import (
 	"reflect"
 	"unsafe"
 )
+
+func (pcreExtra *PCREExtra) Free() { C.pcre_free_study(pcreExtra) }
 
 func (pcre *PCRE) Free() { C.call_pcre_free(unsafe.Pointer(pcre)) }
 
