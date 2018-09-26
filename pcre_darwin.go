@@ -11,11 +11,22 @@ package pcre
 import "C"
 
 import (
+	"errors"
 	"log"
 	"reflect"
 	"unsafe"
 )
 
+type PCREExtra C.struct_pcre_extra
+func Study(code *PCRE, options Option, _ interface{}) (*PCREExtra, error) {
+	var errPtr *C.char
+
+	extra := C.pcre_study((*C.struct_real_pcre8_or_16)(code), C.int(options), &errPtr)
+	if errPtr != nil {
+		return nil, errors.New(C.GoString(errPtr))
+	}
+	return (*PCREExtra)(extra), nil
+}
 
 func (pcreExtra *PCREExtra) Free() { C.pcre_free_study((*C.struct_pcre_extra)(pcreExtra)) }
 
