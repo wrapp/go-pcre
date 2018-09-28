@@ -17,9 +17,18 @@ import (
 )
 
 func MatchString(pattern string, s string) (bool, error) {
-	if re, err := Compile(pattern); err != nil {
+	re, err := Compile(pattern)
+	if err != nil {
 		return false, err
-	} else if matched := re.MatchString(s); !matched {
+	}
+
+	if re.pcreExtra == nil {
+		if err := re.Study(); err != nil {
+			return false, err
+		}
+	}
+
+	if matched := re.MatchString(s); !matched {
 		return false, nil
 	} else {
 		return true, nil
@@ -27,8 +36,8 @@ func MatchString(pattern string, s string) (bool, error) {
 }
 
 type Regexp struct {
-	expr string
-	pcre *pcre.PCRE
+	expr      string
+	pcre      *pcre.PCRE
 	pcreExtra *pcre.PCREExtra
 }
 
@@ -105,7 +114,7 @@ func (re *Regexp) Find(b []byte) []byte {
 	if len(is) != 2 {
 		return nil
 	}
-		return b[is[0]:is[1]]
+	return b[is[0]:is[1]]
 }
 
 func (re *Regexp) FindString(s string) string { return string(re.Find([]byte(s))) }
